@@ -70,7 +70,8 @@ public class NombreUsuario extends javax.swing.JFrame {
 
     private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
         String user=username.getText();
-        
+        MainMenu main=new MainMenu(user);
+        main.setVisible(true);
     }//GEN-LAST:event_loginActionPerformed
 
     public static void main(String args[]) {
