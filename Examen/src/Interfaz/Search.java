@@ -3,6 +3,7 @@ package Interfaz;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JOptionPane;
 
 public class Search extends javax.swing.JFrame {
     String username;
@@ -36,6 +37,11 @@ public class Search extends javax.swing.JFrame {
         topic.setText("Por tema:");
 
         date.setText("Por fecha: Ej. 19-02-2015");
+        date.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dateActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -49,8 +55,8 @@ public class Search extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(95, 95, 95)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(date, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
-                            .addComponent(topic))))
+                            .addComponent(date)
+                            .addComponent(topic, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE))))
                 .addContainerGap(111, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -67,6 +73,15 @@ public class Search extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void dateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dateActionPerformed
+        String tema=topic.getText();
+        String fecha=date.getText();
+        if((tema.equals("")||tema.equals("Por tema:"))&&(fecha.equals("")||fecha.equals("Por fecha: Ej. 19-02-2015"))){
+            JOptionPane.showMessageDialog(null, "No se ha ingresado ningun criterio de busqueda", "Campo vacio",JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+    }//GEN-LAST:event_dateActionPerformed
 
     public static void main(String args[]) {
 
