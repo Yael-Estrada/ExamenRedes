@@ -6,6 +6,12 @@
 package BDD;
 
 //import com.mysql.jdbc.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -113,12 +119,40 @@ public class Conexion {
     
     public void crearTema(String tema, String descripcion){
         try {
-            Statement s = conexion.createStatement();
-            s.executeQuery("call crearTema('"+tema+"','"+descripcion+"');");
-            s.close();
-        } catch (SQLException ex) {
+            try {
+                Statement s = conexion.createStatement();
+                s.executeQuery("call crearTema('"+tema+"','"+descripcion+"');");
+                s.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("No se pudo crear el tema");
+            }
+            int pto=1234;
+            String host="127.0.0.1";
+            Socket cl=new Socket(host,pto);
+            PrintWriter pw=new PrintWriter(new OutputStreamWriter(cl.getOutputStream())); 
+            String eco="Crear Tema";
+            pw.println(eco);
+            pw.flush();
+            pw.close();
+            cl.close();
+            
+            cl=new Socket(host,pto);
+            ObjectOutputStream oos=new ObjectOutputStream(cl.getOutputStream());
+            System.out.println("Enviando la informacion:"+tema+" "+descripcion);
+            oos.writeUTF(tema);
+            oos.flush();
+            oos.writeUTF(descripcion);
+            oos.flush();
+            
+            oos.close();
+            cl.close();
+
+        } catch (IOException ex) {
             Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        
     }
     
     public void publicar(String tema, String nombre, String publicacion, boolean tipo){
