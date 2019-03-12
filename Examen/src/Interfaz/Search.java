@@ -1,6 +1,9 @@
 
 package Interfaz;
 
+import BDD.Conexion;
+import BDD.objectQuery;
+import BDD.objectQuery.publicacion;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JOptionPane;
@@ -33,6 +36,11 @@ public class Search extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jButton1.setText("Buscar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         topic.setText("Por tema:");
 
@@ -75,13 +83,51 @@ public class Search extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void dateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dateActionPerformed
-        String tema=topic.getText();
+
+        
+    }//GEN-LAST:event_dateActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+       String tema=topic.getText();
         String fecha=date.getText();
         if((tema.equals("")||tema.equals("Por tema:"))&&(fecha.equals("")||fecha.equals("Por fecha: Ej. 19-02-2015"))){
             JOptionPane.showMessageDialog(null, "No se ha ingresado ningun criterio de busqueda", "Campo vacio",JOptionPane.WARNING_MESSAGE);
             return;
         }
-    }//GEN-LAST:event_dateActionPerformed
+        if(!(tema.equals("")||tema.equals("Por tema:"))&&!(fecha.equals("")||fecha.equals("Por fecha: Ej. 19-02-2015"))){
+            Conexion conexion=new Conexion();
+            objectQuery oq=new objectQuery();
+            System.out.println("Buscando por tema y fecha:");
+            oq=conexion.buscarPublicaciones(tema,fecha);
+            for(publicacion p: oq.getPublicaciones()){
+                System.out.println(""+p.toString());
+            }
+            return; 
+        }
+        if(!(tema.equals("")||tema.equals("Por tema:"))){
+            Conexion conexion=new Conexion();
+            objectQuery oq=new objectQuery();
+            System.out.println("Buscando por tema:");
+            oq=conexion.buscarPublicaciones(tema,null);
+            for(publicacion p: oq.getPublicaciones()){
+                System.out.println(""+p.toString());
+            }
+            return;
+        }
+        if(!(fecha.equals("")||fecha.equals("Por fecha: Ej. 19-02-2015"))){
+            Conexion conexion=new Conexion();
+            objectQuery oq=new objectQuery();
+            System.out.println("Buscando por fecha:");
+            oq=conexion.buscarPublicaciones(null,fecha);
+            for(publicacion p: oq.getPublicaciones()){
+                System.out.println(""+p.toString());
+            }
+            return;
+        }
+        
+        
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     public static void main(String args[]) {
 
