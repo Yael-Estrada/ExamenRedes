@@ -74,23 +74,40 @@ public class Conexion {
         try {
             Statement s = conexion.createStatement();
             ResultSet r;
-            r = s.executeQuery("select idTemas from tema where nombre='"+tema+"';");
+            r = s.executeQuery("select idTemas from temas where nombre='"+tema+"';");
             if(r.next()){
               idtema=r.getInt("idTemas");
             }
         } catch (SQLException ex) {
             Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
         }
+        String pub = null,us = null,fe=null;
         try {
             Statement s = conexion.createStatement();
-            ResultSet r;
-            r = s.executeQuery("call buscarPublicaciones('"+idtema+"','"+fecha+"');");
+           ResultSet r;
+            r = s.executeQuery("select*from publicaciones where idTemas="+idtema+" or fecha='"+fecha+"';");
             while(r.next()){
-                publicaciones.setPublicaciones(r.getString("Tema"),r.getString("publicacion"),r.getString("usuario"),r.getString("fecha"));
+                idtema=r.getInt("idTemas");
+                pub=r.getString("publicacion");
+                us=r.getString("usuario");
+                fe=r.getString("fecha");
+                //publicaciones.setPublicaciones(tema,r.getString("publicacion"),r.getString("usuario"),r.getString("fecha"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
         }
+        String nom="";
+        try {
+            Statement s = conexion.createStatement();
+            ResultSet r;
+            r = s.executeQuery("select nombre from temas where idTemas="+idtema+";");
+            if(r.next()){
+              nom=r.getString("nombre");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        publicaciones.setPublicaciones(nom,pub,us,fe);
         return publicaciones;
     }
     
