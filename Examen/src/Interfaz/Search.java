@@ -102,6 +102,9 @@ public class Search extends javax.swing.JFrame {
             for(publicacion p: oq.getPublicaciones()){
                 System.out.println(""+p.toString());
             }
+            ShowTopics st=new ShowTopics(username);
+            st.setVisible(true);
+            st.setPublicaciones(oq.getPublicaciones());
             return; 
         }
         if(!(tema.equals("")||tema.equals("Por tema:"))){
@@ -112,6 +115,9 @@ public class Search extends javax.swing.JFrame {
             for(publicacion p: oq.getPublicaciones()){
                 System.out.println(""+p.toString());
             }
+            ShowTopics st=new ShowTopics(username);
+            st.setVisible(true);
+            st.setPublicaciones(oq.getPublicaciones());
             return;
         }
         if(!(fecha.equals("")||fecha.equals("Por fecha: Ej. 19-02-2015"))){
@@ -122,6 +128,9 @@ public class Search extends javax.swing.JFrame {
             for(publicacion p: oq.getPublicaciones()){
                 System.out.println(""+p.toString());
             }
+            ShowTopics st=new ShowTopics(username);
+            st.setVisible(true);
+            st.setPublicaciones(oq.getPublicaciones());
             return;
         }
         
