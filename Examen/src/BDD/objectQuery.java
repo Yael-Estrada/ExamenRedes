@@ -15,8 +15,14 @@ import java.util.*;
 public class objectQuery implements Serializable{
     class temas{
         String nombre;
+
+        @Override
+        public String toString() {
+            return "Tema{" + "nombre=" + nombre + '}';
+        }
+        
     }
-    class publicacion{
+    public class publicacion{
         String tema,texto, usuario,fecha;
         public String getTemaPublicacion(){
             return tema;
@@ -30,6 +36,12 @@ public class objectQuery implements Serializable{
         public String getFechaPublicacion(){
             return fecha;
         }
+
+        @Override
+        public String toString() {
+            return "Publicacion{" + "tema=" + tema + ", texto=" + texto + ", usuario=" + usuario + ", fecha=" + fecha + '}';
+        }
+        
     }
     private Vector <String> t;
     private Vector <publicacion>p;
@@ -47,6 +59,11 @@ public class objectQuery implements Serializable{
     public Vector<String> getTemas(){
         return t;
     }
+
+    public Vector<publicacion> getPublicaciones() {
+        return p;
+    }
+    
     
     public void setPublicaciones(String tema, String texto, String usuario, String fecha){
         publicacion c = new publicacion();
