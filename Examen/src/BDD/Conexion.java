@@ -50,6 +50,7 @@ public class Conexion {
         return temas;
     }
     
+    
     public objectQuery mostrarPublicaciones(String tema){
         objectQuery publicaciones = new objectQuery();
         publicaciones.setTipo(false);
@@ -69,10 +70,21 @@ public class Conexion {
     public objectQuery buscarPublicaciones(String tema, String fecha){
         objectQuery publicaciones = new objectQuery();
         publicaciones.setTipo(false);
+        int idtema=-1;
         try {
             Statement s = conexion.createStatement();
             ResultSet r;
-            r = s.executeQuery("call buscarPublicaciones('"+tema+"','"+fecha+"');");
+            r = s.executeQuery("select idTemas from tema where nombre='"+tema+"';");
+            if(r.next()){
+              idtema=r.getInt("idTemas");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            Statement s = conexion.createStatement();
+            ResultSet r;
+            r = s.executeQuery("call buscarPublicaciones('"+idtema+"','"+fecha+"');");
             while(r.next()){
                 publicaciones.setPublicaciones(r.getString("Tema"),r.getString("publicacion"),r.getString("usuario"),r.getString("fecha"));
             }
