@@ -1,17 +1,24 @@
 
 package Interfaz;
 
-import javax.swing.JTree;
+import javax.swing.ImageIcon;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.DefaultTreeModel;
 
 public class MainMenu extends javax.swing.JFrame {
     String username;
+    DefaultTreeModel modelo;
+    DefaultTreeCellRenderer render;
+    
     public MainMenu(String user) {
         initComponents();
         this.username=user;
-        
         DefaultMutableTreeNode raiz=new DefaultMutableTreeNode("Temas de interés");
-        indice=new JTree(raiz);
+        modelo = new DefaultTreeModel(raiz);
+        indice.setModel(modelo);
+        render= (DefaultTreeCellRenderer)indice.getCellRenderer();
+        render.setLeafIcon(new ImageIcon("C:\\Users\\Principal\\Documents\\GitHub\\ExamenRedes\\Examen\\iconos\\file.png"));
     }
 
     @SuppressWarnings("unchecked")
