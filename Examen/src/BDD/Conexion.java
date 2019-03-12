@@ -24,7 +24,7 @@ public class Conexion {
     public  Conexion(){
         String url = "jdbc:mysql://localhost:3306/FORO";
         String user = "root";
-        String pass = "n0m3l0";
+        String pass = "root";
         System.out.println("Conectando…");
         try{
             conexion = DriverManager.getConnection(url,user,pass);
