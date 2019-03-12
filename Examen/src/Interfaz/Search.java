@@ -44,7 +44,7 @@ public class Search extends javax.swing.JFrame {
 
         topic.setText("Por tema:");
 
-        date.setText("Por fecha: Ej. 19-02-2015");
+        date.setText("Por fecha: Ej. 2015-02-19");
         date.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 dateActionPerformed(evt);
