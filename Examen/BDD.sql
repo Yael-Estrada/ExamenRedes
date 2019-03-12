@@ -50,6 +50,7 @@ select tema as 'Tema',publicacion,usuario,fecha from publicaciones where idTemas
 end; **
 delimiter ;
 	
+DROP PROCEDURE IF EXISTS buscarPublicaciones;
 delimiter **
 create procedure buscarPublicaciones(in tema varchar(45),in f varchar(45))
 begin
@@ -67,3 +68,4 @@ end if;
 
 end; **
 delimiter ;
+
