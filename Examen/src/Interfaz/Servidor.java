@@ -1,12 +1,15 @@
 
 package Interfaz;
 
+import BDD.Conexion;
+import BDD.objectQuery;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
@@ -33,7 +36,10 @@ public class Servidor {
                 BufferedReader br=new BufferedReader(new InputStreamReader(cl.getInputStream()));
                 msj=br.readLine();
                 switch(msj){
-                    case "Crear Tema": crearTema(s);
+                    case "Crear Tema": crearTema(s); break;
+                    case "Buscar por tema": searchByTopic(s); break;
+                    case "Buscar por fecha": searchByDate(s); break;
+                    case "Buscar por tema y fecha": search(s); break;
                 }
                
                 br.close();
@@ -42,6 +48,94 @@ public class Servidor {
         } catch (IOException ex) {
             Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    private static void searchByTopic(ServerSocket s){
+                String tema="";
+                 try {   
+                    Socket cl=s.accept();
+                    System.out.println("Recibiendo... ");
+                    BufferedReader br=new BufferedReader(new InputStreamReader(cl.getInputStream()));
+                    tema=br.readLine();
+                    br.close();
+                    
+                    Conexion conexion=new Conexion();
+                    objectQuery oq=new objectQuery();
+                    System.out.println("Buscando por tema:");
+                    oq=conexion.buscarPublicaciones(tema,null);
+                    for(objectQuery.publicacion p: oq.getPublicaciones()){
+                        System.out.println(""+p.toString());
+                    }
+                    cl.close();
+                    
+                    cl=s.accept();
+                    ObjectOutputStream oos=new ObjectOutputStream(cl.getOutputStream());
+                    oos.writeObject(oq);
+                    oos.flush();
+                    oos.close();
+                    cl.close();
+                    
+                } catch (IOException ex) {
+                    Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
+                } 
+    }
+    
+    private static void searchByDate(ServerSocket s){
+                String fecha="";
+                 try {   
+                    Socket cl=s.accept();
+                    System.out.println("Recibiendo... ");
+                    BufferedReader br=new BufferedReader(new InputStreamReader(cl.getInputStream()));
+                    fecha=br.readLine();
+                    br.close();
+                    
+                    Conexion conexion=new Conexion();
+                    objectQuery oq=new objectQuery();
+                    System.out.println("Buscando por fecha:");
+                    oq=conexion.buscarPublicaciones(null,fecha);
+                    for(objectQuery.publicacion p: oq.getPublicaciones()){
+                        System.out.println(""+p.toString());
+                    }
+                    
+                    cl=s.accept();
+                    ObjectOutputStream oos=new ObjectOutputStream(cl.getOutputStream());
+                    oos.writeObject(oq);
+                    oos.flush();
+                    oos.close();
+                    cl.close();
+                    
+                } catch (IOException ex) {
+                    Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
+                } 
+    }
+    private static void search(ServerSocket s){
+                String tema="",fecha="";
+                 try {   
+                    Socket cl=s.accept();
+                    System.out.println("Recibiendo... ");
+                   BufferedReader br=new BufferedReader(new InputStreamReader(cl.getInputStream()));
+                    tema=br.readLine();
+                    fecha=br.readLine();
+                    br.close();
+                    
+                    Conexion conexion=new Conexion();
+                    objectQuery oq=new objectQuery();
+                    System.out.println("Buscando por tema y fecha:");
+                    oq=conexion.buscarPublicaciones(tema,fecha);
+                    for(objectQuery.publicacion p: oq.getPublicaciones()){
+                        System.out.println(""+p.toString());
+                    }
+                    
+                    cl=s.accept();
+                    ObjectOutputStream oos=new ObjectOutputStream(cl.getOutputStream());
+                    oos.writeObject(oq);
+                    oos.flush();
+                    oos.close();
+                    cl.close();
+                    
+                } catch (IOException ex) {
+                    Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
+                } 
     }
 
     private static void crearTema(ServerSocket s) {
