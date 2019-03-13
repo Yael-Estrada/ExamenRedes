@@ -13,7 +13,7 @@ import java.util.*;
  * @author mario
  */
 public class objectQuery implements Serializable{
-    class temas{
+    class temas implements Serializable{
         String nombre;
 
         @Override
@@ -22,7 +22,7 @@ public class objectQuery implements Serializable{
         }
         
     }
-    public class publicacion{
+    public class publicacion implements Serializable{
         String tema,texto, usuario,fecha;
         public String getTemaPublicacion(){
             return tema;
