@@ -28,7 +28,7 @@ public class Conexion {
     
     Connection conexion;
     public  Conexion(){
-        String url = "jdbc:mysql://localhost:3306/FORO";
+        String url = "jdbc:mysql://localhost:3306/FORO?useSSL=false";
         String user = "root";
         String pass = "root";
         System.out.println("Conectando…");
