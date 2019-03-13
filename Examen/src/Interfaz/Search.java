@@ -6,6 +6,14 @@ import BDD.objectQuery;
 import BDD.objectQuery.publicacion;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class Search extends javax.swing.JFrame {
@@ -88,50 +96,95 @@ public class Search extends javax.swing.JFrame {
     }//GEN-LAST:event_dateActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       String tema=topic.getText();
-        String fecha=date.getText();
-        if((tema.equals("")||tema.equals("Por tema:"))&&(fecha.equals("")||fecha.equals("Por fecha: Ej. 19-02-2015"))){
-            JOptionPane.showMessageDialog(null, "No se ha ingresado ningun criterio de busqueda", "Campo vacio",JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        if(!(tema.equals("")||tema.equals("Por tema:"))&&!(fecha.equals("")||fecha.equals("Por fecha: Ej. 19-02-2015"))){
-            Conexion conexion=new Conexion();
-            objectQuery oq=new objectQuery();
-            System.out.println("Buscando por tema y fecha:");
-            oq=conexion.buscarPublicaciones(tema,fecha);
-            for(publicacion p: oq.getPublicaciones()){
-                System.out.println(""+p.toString());
+        try {
+            String tema=topic.getText();
+            String fecha=date.getText();
+            if((tema.equals("")||tema.equals("Por tema:"))&&(fecha.equals("")||fecha.equals("Por fecha: Ej. 19-02-2015"))){
+                JOptionPane.showMessageDialog(null, "No se ha ingresado ningun criterio de busqueda", "Campo vacio",JOptionPane.WARNING_MESSAGE);
+                return;
             }
-            ShowTopics st=new ShowTopics(username);
-            st.setVisible(true);
-            st.setPublicaciones(oq.getPublicaciones());
-            return; 
-        }
-        if(!(tema.equals("")||tema.equals("Por tema:"))){
-            Conexion conexion=new Conexion();
-            objectQuery oq=new objectQuery();
-            System.out.println("Buscando por tema:");
-            oq=conexion.buscarPublicaciones(tema,null);
-            for(publicacion p: oq.getPublicaciones()){
-                System.out.println(""+p.toString());
+            if(!(tema.equals("")||tema.equals("Por tema:"))&&!(fecha.equals("")||fecha.equals("Por fecha: Ej. 2015-02-19"))){
+                System.out.println("Buscando por tema y fecha");
+                Socket cl=new Socket("127.0.0.1",1234);
+                PrintWriter pw=new PrintWriter(new OutputStreamWriter(cl.getOutputStream())); 
+                String eco="Buscar por tema y fecha";
+                pw.println(eco);
+                pw.flush();
+                pw.close();
+                cl.close();
+
+                cl=new Socket("127.0.0.1",1234);
+                pw=new PrintWriter(new OutputStreamWriter(cl.getOutputStream())); 
+                pw.println(tema);
+                pw.flush();
+                pw.println(fecha);
+                pw.flush();
+                pw.close();
+                cl.close();
+                
+                cl=new Socket("127.0.0.1",1234);
+                ObjectInputStream ois=new ObjectInputStream(cl.getInputStream());
+                objectQuery oq=(objectQuery)ois.readObject();
+                ois.close();
+                cl.close();
+                System.out.println("Se recibió la consulta!");
+                return;
             }
-            ShowTopics st=new ShowTopics(username);
-            st.setVisible(true);
-            st.setPublicaciones(oq.getPublicaciones());
-            return;
-        }
-        if(!(fecha.equals("")||fecha.equals("Por fecha: Ej. 19-02-2015"))){
-            Conexion conexion=new Conexion();
-            objectQuery oq=new objectQuery();
-            System.out.println("Buscando por fecha:");
-            oq=conexion.buscarPublicaciones(null,fecha);
-            for(publicacion p: oq.getPublicaciones()){
-                System.out.println(""+p.toString());
+            if(!(tema.equals("")||tema.equals("Por tema:"))){
+                System.out.println("Buscando por tema");
+                Socket cl=new Socket("127.0.0.1",1234);
+                PrintWriter pw=new PrintWriter(new OutputStreamWriter(cl.getOutputStream())); 
+                String eco="Buscar por tema";
+                pw.println(eco);
+                pw.flush();
+                pw.close();
+                cl.close();
+                
+                cl=new Socket("127.0.0.1",1234);
+                pw=new PrintWriter(new OutputStreamWriter(cl.getOutputStream())); 
+                pw.println(tema);
+                pw.flush();
+                pw.close();
+                cl.close();
+                
+                cl=new Socket("127.0.0.1",1234);
+                ObjectInputStream ois=new ObjectInputStream(cl.getInputStream());
+                objectQuery oq=(objectQuery)ois.readObject();
+                ois.close();
+                
+                cl.close();
+                System.out.println("Se recibió la consulta!");
+                return;
             }
-            ShowTopics st=new ShowTopics(username);
-            st.setVisible(true);
-            st.setPublicaciones(oq.getPublicaciones());
-            return;
+            if(!(fecha.equals("")||fecha.equals("Por fecha: Ej. 19-02-2015"))){
+                System.out.println("Buscando por fecha");
+                Socket cl=new Socket("127.0.0.1",1234);
+                PrintWriter pw=new PrintWriter(new OutputStreamWriter(cl.getOutputStream())); 
+                String eco="Buscar por fecha";
+                pw.println(eco);
+                pw.flush();
+                pw.close();
+                cl.close();
+
+                cl=new Socket("127.0.0.1",1234);
+                pw=new PrintWriter(new OutputStreamWriter(cl.getOutputStream())); 
+                pw.println(fecha);
+                pw.flush();
+                pw.close();
+                cl.close();
+                
+                cl=new Socket("127.0.0.1",1234);
+                ObjectInputStream ois=new ObjectInputStream(cl.getInputStream());
+                objectQuery oq=(objectQuery)ois.readObject();
+                ois.close();
+                cl.close();
+                System.out.println("Se recibió la consulta!");
+                return;
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Search.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Search.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         
