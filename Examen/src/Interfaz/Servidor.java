@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 public class Servidor {
     public static int pto=1234;
     public static String host="127.0.0.1";
-    public static String pathServidor="C:\\Users\\Principal\\Documents\\GitHub\\ExamenRedes\\";
+    public static String pathServidor="C:\\Users\\Principal\\Documents\\GitHub\\ExamenRedes\\Examen\\";
     
     public static void main(String[] args) {
         try {
@@ -40,6 +40,8 @@ public class Servidor {
                     case "Buscar por tema": searchByTopic(s); break;
                     case "Buscar por fecha": searchByDate(s); break;
                     case "Buscar por tema y fecha": search(s); break;
+                    case "Mostrar Temas": sendTemas(s); break;
+                    case "Publicar": CrearPublicacion(s); break;
                 }
                
                 br.close();
@@ -161,5 +163,68 @@ public class Servidor {
         } catch (IOException ex) {
             Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
         } 
+    }
+    
+    public static void sendTemas(ServerSocket s){
+                 try {   
+                    Socket cl=s.accept();
+                    System.out.println("Enviando... ");
+                    
+                    Conexion conexion=new Conexion();
+                    objectQuery oq=new objectQuery();
+                    System.out.println("Buscando por tema y fecha:");
+                    oq=conexion.buscarTemas();
+                    for(objectQuery.publicacion p: oq.getPublicaciones()){
+                        System.out.println(""+p.toString());
+                    }
+                    
+                    cl=s.accept();
+                    ObjectOutputStream oos=new ObjectOutputStream(cl.getOutputStream());
+                    oos.writeObject(oq);
+                    oos.flush();
+                    oos.close();
+                    cl.close();
+                    
+                } catch (IOException ex) {
+                    Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
+                } 
+    }
+    
+    public static void CrearPublicacion(ServerSocket s){
+                String tema="",texto="",usuario="";
+                 try {   
+                    Socket cl=s.accept();
+                    System.out.println("Recibiendo... ");
+                    BufferedReader br=new BufferedReader(new InputStreamReader(cl.getInputStream()));
+                    tema=br.readLine();
+                    texto=br.readLine();
+                    usuario=br.readLine();
+                    br.close();
+                    
+                    Conexion conexion=new Conexion();
+                    System.out.println("Creando Publicacion:");
+                    conexion.publicar(tema, usuario,texto, true);
+                    File x=new File(pathServidor+"Publicaciones\\"+tema+"\\");
+                    if(!x.exists()) x.mkdir();
+                     File f=new File(x.getAbsolutePath()+"\\"+x.listFiles().length+".txt");
+                     PrintWriter p = new PrintWriter(f);
+                    java.util.Date fecha = new java.util.Date();
+                    java.sql.Date d = new java.sql.Date(fecha.getTime());  
+                    p.println(usuario+"\t"+d.toString());
+                    p.flush();
+                    p.println(texto);
+                    p.flush();
+                    p.close();
+                    
+                    cl=s.accept();
+                    PrintWriter pw=new PrintWriter(cl.getOutputStream());
+                    pw.println("Publicacion creada!");
+                    pw.flush();
+                    pw.close();
+                    cl.close();
+                    
+                } catch (IOException ex) {
+                    Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
+                } 
     }
 }
